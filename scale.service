@@ -1,0 +1,11 @@
+[Unit]
+Description=Service to monitor ble scale and upload weight readings
+After=network.target
+
+[Service]
+WorkingDirectory=xxx
+ExecStart=xxx
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -37,16 +37,18 @@ def notification_handler(ch: BleakGATTCharacteristic, data: bytearray):
     if stable and weight > 10:
         logger.info(f"weight: {weight:.2f} kg (stable) @ {datetime.datetime.now()}")
 
-        # Check what the last weight was
         if not LAST_WEIGH_PATH.exists():
             logger.error("No last weight file found, creating one.")
             LAST_WEIGH_PATH.write_text(str(weight))
 
+        # Check what the last weight was
         last_weight = float(LAST_WEIGH_PATH.read_text().strip())
         if abs(weight - last_weight) <= SWING_RANGE:
             with DATA_FILE.open("a") as f:
                 f.write(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')},{weight:.2f}\n")
                 client.table("weight").insert({"time":datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "wieght":f"{weight:.2f}" })
+            with LAST_WEIGH_PATH.open("w") as f:
+                f.write(f"{weight:.2f}")
         else:
             logger.info(f"Weight change {abs(weight - last_weight):.2f} kg exceeds swing range of {SWING_RANGE} kg. Not logging.")
             
