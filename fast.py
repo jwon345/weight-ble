@@ -46,9 +46,9 @@ def notification_handler(ch: BleakGATTCharacteristic, data: bytearray):
         if abs(weight - last_weight) <= SWING_RANGE:
             with DATA_FILE.open("a") as f:
                 f.write(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')},{weight:.2f}\n")
-                client.table("weight").insert({"time":datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "weight":f"{weight:.2f}" })
             with LAST_WEIGH_PATH.open("w") as f:
                 f.write(f"{weight:.2f}")
+            client.table("weight").insert({"time":datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "weight":f"{weight:.2f}"})
         else:
             logger.info(f"Weight change {abs(weight - last_weight):.2f} kg exceeds swing range of {SWING_RANGE} kg. Not logging.")
             
