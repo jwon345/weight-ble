@@ -1,1 +1,5 @@
 .env
+miscale_addr.txt
+.gitignore
+weight.csv
+last_weight.txt
